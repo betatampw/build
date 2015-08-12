@@ -1,0 +1,9 @@
+{
+  "name": "test",
+  "version": "0.1.0",
+  "author": "a.kovalenko",
+  "devDependencies": {
+    "bower": "^1.4.1",
+    "grunt": "^0.4.5"
+  }
+}
