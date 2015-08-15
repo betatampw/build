@@ -1,0 +1,12 @@
+{
+	"all": {
+		"links": ["menu item 1","menu item 2","menu item 3"]
+	},
+	"index": {
+		"title": "Index",
+		"main": true
+	},
+	"404": {
+		"title": "404"
+	}
+}

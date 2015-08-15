@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Document</title>
+	</head>
+	<body>
+		<ul>
+		{{#each all.links}}
+			<li>{{this}}</li>
+		{{/each}}
+		</ul>
+		{{#unless page.main}}
+		<h1>{{page.title}}</h1>
+		{{/unless}}
