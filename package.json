@@ -12,7 +12,7 @@
     "grunt-csscomb": "^3.0.1"
   },
   "scripts": {
-		"preinstall": "npm install -g bower && gem install sass",
+		"preinstall": "npm install -g bower && npm install -g grunt-cli && gem install sass",
 		"postinstall": "bower i"
   },
   "browsers": {

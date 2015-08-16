@@ -47,7 +47,7 @@ module.exports = function (grunt) {
 			dist: {
 				files: {
 					'build/template_styles.css': 'src/template_styles.scss',
-					'build/bootstrap.css': 'src/scss/bootstrap.scss'
+					'build/bootstrap.css': 'src/bootstrap.scss'
 				}
 			}
 		},
