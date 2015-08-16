@@ -38,6 +38,44 @@ module.exports = function (grunt) {
 				files: compileHandlebarsAr,
 				templateData: compileHandlebarsDataAr
 			}
+		},
+		sass: {
+			options: {
+				noCache: true,
+				sourcemap: 'none'
+			},
+			dist: {
+				files: {
+					'build/template_styles.css': 'src/template_styles.scss',
+					'build/bootstrap.css': 'src/scss/bootstrap.scss'
+				}
+			}
+		},
+		autoprefixer: {
+			options: {
+				browsers: [
+					'Android >= <%= pkg.browsers.android %>',
+					'Chrome >= <%= pkg.browsers.chrome %>',
+					'Firefox >= <%= pkg.browsers.firefox %>',
+					'Explorer >= <%= pkg.browsers.ie %>',
+					'iOS >= <%= pkg.browsers.ios %>',
+					'Opera >= <%= pkg.browsers.opera %>',
+					'Safari >= <%= pkg.browsers.safari %>'
+				]
+			},
+			dist: {
+				src: ['build/template_styles.css']
+			}
+		},
+		csscomb: {
+			dist: {
+				options: {
+					config: '.csscomb.json'
+				},
+				files: {
+					'build/template_styles.css': ['build/template_styles.css']
+				}
+			}
 		}
 	});
 
@@ -45,6 +83,11 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-compile-handlebars');
+	grunt.loadNpmTasks('grunt-contrib-sass');
+	grunt.loadNpmTasks('grunt-autoprefixer');
+	grunt.loadNpmTasks('grunt-csscomb');
   // Register tasks.
-  grunt.registerTask('default', ['clean','concat','compile-handlebars']);
+	grunt.registerTask('html', ['concat','compile-handlebars']);
+	grunt.registerTask('css', ['sass','autoprefixer','csscomb']);
+  grunt.registerTask('default', ['clean','html','css']);
 };
