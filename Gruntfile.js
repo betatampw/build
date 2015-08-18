@@ -47,7 +47,7 @@ module.exports = function (grunt) {
 			dist: {
 				files: {
 					'build/template_styles.css': 'src/template_styles.scss',
-					'build/bootstrap.css': 'src/bootstrap.scss'
+					'build/css/bootstrap.css': 'src/bootstrap.scss'
 				}
 			}
 		},
@@ -76,6 +76,17 @@ module.exports = function (grunt) {
 					'build/template_styles.css': ['build/template_styles.css']
 				}
 			}
+		},
+		cssmin: {
+			target: {
+				files: [{
+					expand: true,
+					cwd: 'build/css',
+					src: ['*.css', '!*.min.css'],
+					dest: 'build/css',
+					ext: '.min.css'
+				}]
+			}
 		}
 	});
 
@@ -86,8 +97,9 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-sass');
 	grunt.loadNpmTasks('grunt-autoprefixer');
 	grunt.loadNpmTasks('grunt-csscomb');
+	grunt.loadNpmTasks('grunt-contrib-cssmin');
   // Register tasks.
 	grunt.registerTask('html', ['concat','compile-handlebars']);
-	grunt.registerTask('css', ['sass','autoprefixer','csscomb']);
+	grunt.registerTask('css', ['sass','autoprefixer','csscomb','cssmin']);
   grunt.registerTask('default', ['clean','html','css']);
 };

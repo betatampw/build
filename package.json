@@ -8,12 +8,13 @@
     "grunt-compile-handlebars": "^2.0.0",
     "grunt-contrib-clean": "^0.6.0",
     "grunt-contrib-concat": "^0.5.1",
+    "grunt-contrib-cssmin": "^0.13.0",
     "grunt-contrib-sass": "^0.9.2",
     "grunt-csscomb": "^3.0.1"
   },
   "scripts": {
-		"preinstall": "npm install -g bower && npm install -g grunt-cli && gem install sass",
-		"postinstall": "bower i"
+    "preinstall": "npm install -g bower && npm install -g grunt-cli && gem install sass",
+    "postinstall": "bower i"
   },
   "browsers": {
     "android": 4,
