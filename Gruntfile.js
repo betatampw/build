@@ -34,6 +34,7 @@ module.exports = function (grunt) {
 			},
 			bootstrapjs: {
 				options: {
+					banner: 'if("undefined"==typeof jQuery)throw new Error("Bootstraps JavaScript requires jQuery");+function(a){"use strict";var b=a.fn.jquery.split(" ")[0].split(".");if(b[0]<2&&b[1]<9||1==b[0]&&9==b[1]&&b[2]<1)throw new Error("Bootstraps JavaScript requires jQuery version 1.9.1 or higher")}(jQuery),',
 					process: function(src, filepath) {
 						if(filepath.indexOf('carousel.js')>=0){
 							return '';
@@ -47,7 +48,7 @@ module.exports = function (grunt) {
 			}
 		},
 		'compile-handlebars': {
-			anyArray: {
+			pages: {
 				files: compileHandlebarsAr,
 				templateData: compileHandlebarsDataAr
 			}
