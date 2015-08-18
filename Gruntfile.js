@@ -26,11 +26,24 @@ module.exports = function (grunt) {
     pkg: grunt.file.readJSON('package.json'),
 		clean: ["build/*"],
 		concat: {
-			options: {
-				separator: '\n',
-			},
 			pages: {
+				options: {
+					separator: '\n',
+				},
 				files: pagesConcatObject
+			},
+			bootstrapjs: {
+				options: {
+					process: function(src, filepath) {
+						if(filepath.indexOf('carousel.js')>=0){
+							return '';
+						}
+						return src;
+					},
+				},
+				files: {
+					'build/js/bootstrap.js': ['bower_components/bootstrap-sass/assets/javascripts/bootstrap/*.js'],
+				}
 			}
 		},
 		'compile-handlebars': {
@@ -87,6 +100,17 @@ module.exports = function (grunt) {
 					ext: '.min.css'
 				}]
 			}
+		},
+		uglify: {
+			target: {
+				files: [{
+					expand: true,
+					cwd: 'build/js',
+					src: ['*.js', '!*.min.js'],
+					dest: 'build/js',
+					ext: '.min.js'
+				}]
+			}
 		}
 	});
 
@@ -98,8 +122,11 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-autoprefixer');
 	grunt.loadNpmTasks('grunt-csscomb');
 	grunt.loadNpmTasks('grunt-contrib-cssmin');
+	grunt.loadNpmTasks('grunt-contrib-uglify');
+
   // Register tasks.
-	grunt.registerTask('html', ['concat','compile-handlebars']);
+	grunt.registerTask('html', ['concat:pages','compile-handlebars']);
 	grunt.registerTask('css', ['sass','autoprefixer','csscomb','cssmin']);
-  grunt.registerTask('default', ['clean','html','css']);
+	grunt.registerTask('js', ['concat:bootstrapjs','uglify']);
+  grunt.registerTask('default', ['clean','html','css','js']);
 };
