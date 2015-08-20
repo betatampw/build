@@ -112,6 +112,14 @@ module.exports = function (grunt) {
 					ext: '.min.js'
 				}]
 			}
+		},
+		copy: {
+			main: {
+				files: [
+					{expand: true, src: ['src/icons/*'], flatten: true, dest: 'build/icons/', filter: 'isFile'},
+					{expand: true, src: ['src/images/*'], flatten: true, dest: 'build/images/', filter: 'isFile'}
+				],
+			},
 		}
 	});
 
@@ -124,10 +132,11 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-csscomb');
 	grunt.loadNpmTasks('grunt-contrib-cssmin');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
+	grunt.loadNpmTasks('grunt-contrib-copy');
 
   // Register tasks.
 	grunt.registerTask('html', ['concat:pages','compile-handlebars']);
 	grunt.registerTask('css', ['sass','autoprefixer','csscomb','cssmin']);
 	grunt.registerTask('js', ['concat:bootstrapjs','uglify']);
-  grunt.registerTask('default', ['clean','html','css','js']);
+  grunt.registerTask('default', ['clean','html','css','js','copy']);
 };
