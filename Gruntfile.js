@@ -120,6 +120,15 @@ module.exports = function (grunt) {
 					{expand: true, src: ['src/images/*'], flatten: true, dest: 'build/images/', filter: 'isFile'}
 				],
 			},
+			js: {
+				files: [
+					{expand: true, src: [
+						'bower_components/jquery/dist/jquery.min.js',
+						'bower_components/respond/dest/respond.min.js',
+						'bower_components/modernizr/modernizr.js'
+					], flatten: true, dest: 'build/js/', filter: 'isFile'}
+				],
+			}
 		}
 	});
 
@@ -137,6 +146,6 @@ module.exports = function (grunt) {
   // Register tasks.
 	grunt.registerTask('html', ['concat:pages','compile-handlebars']);
 	grunt.registerTask('css', ['sass','autoprefixer','csscomb','cssmin']);
-	grunt.registerTask('js', ['concat:bootstrapjs','uglify']);
-  grunt.registerTask('default', ['clean','html','css','js','copy']);
+	grunt.registerTask('js', ['concat:bootstrapjs','copy:js','uglify']);
+  grunt.registerTask('default', ['clean','html','css','js','copy:main']);
 };

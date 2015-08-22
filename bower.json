@@ -1,6 +1,9 @@
 {
   "name": "build",
   "devDependencies": {
-    "bootstrap-sass": "~3.3.5"
+    "jquery": "~1.11.2",
+    "bootstrap-sass": "~3.3.5",
+    "modernizr": "~2.8.3",
+    "respond": "https://github.com/scottjehl/Respond.git#~1.4.2"
   }
 }
