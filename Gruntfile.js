@@ -1,5 +1,7 @@
 module.exports = function (grunt) {
 	'use struct';
+
+	// TODO убрать все лишнее
 	var fs = require('fs');
 
 	var compileHandlebarsAr = [{
@@ -8,49 +10,50 @@ module.exports = function (grunt) {
 	}];
 	var compileHandlebarsDataAr = [];
 	var pageSettings = JSON.parse(fs.readFileSync('src/pagesSettings.json', 'utf8'));
-	var pagesConcatObject = {};
 	var pages = fs.readdirSync('src/pages/');
-
-
 	pages.forEach(function (value) {
 		var file = value.split('.');
-		pagesConcatObject['build/'+value] = ['src/header.html', 'src/pages/'+value, 'src/footer.html'];
 		compileHandlebarsAr[0].src.push('build/'+value);
 		compileHandlebarsAr[0].dest.push('build/'+value);
 		compileHandlebarsDataAr.push({"all":pageSettings['all'],"page":pageSettings[file[0]]});
 	});
 
-
   // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+		pagesData: grunt.file.readJSON('src/pagesSettings.json'),
 		clean: ["build/*"],
 		concat: {
 			pages: {
 				options: {
-					separator: '\n',
+					banner: grunt.file.read('src/header.html') + '\n',
+					footer: '\n' + grunt.file.read('src/footer.html')
 				},
-				files: pagesConcatObject
+				files: [{
+					expand: true,
+					cwd: 'src/pages/',
+					src: '*.html',
+					dest: 'build/'
+				}]
 			},
 			bootstrapjs: {
-				options: {
-					banner: 'if("undefined"==typeof jQuery)throw new Error("Bootstraps JavaScript requires jQuery");+function(a){"use strict";var b=a.fn.jquery.split(" ")[0].split(".");if(b[0]<2&&b[1]<9||1==b[0]&&9==b[1]&&b[2]<1)throw new Error("Bootstraps JavaScript requires jQuery version 1.9.1 or higher")}(jQuery),',
-					process: function(src, filepath) {
-						if(filepath.indexOf('carousel.js')>=0){
-							return '';
-						}
-						return src;
-					},
-				},
 				files: {
-					'build/js/bootstrap.js': ['bower_components/bootstrap-sass/assets/javascripts/bootstrap/*.js'],
+					'build/js/core/bootstrap.js': grunt.file.readJSON('src/core/bootstrap.json'),
 				}
 			}
 		},
 		'compile-handlebars': {
 			pages: {
-				files: compileHandlebarsAr,
-				templateData: compileHandlebarsDataAr
+				/*files: compileHandlebarsAr,
+				templateData: compileHandlebarsDataAr*/
+				files: [{
+					expand: true,
+					cwd: 'build/',
+					src: '*.html',
+					dest: 'build/',
+					ext: '.html'
+				}],
+				templateData: {'template':'<%= pagesData.all  %>',page:'<%= pagesData.*  %>'}
 			}
 		},
 		sass: {
@@ -61,7 +64,7 @@ module.exports = function (grunt) {
 			dist: {
 				files: {
 					'build/template_styles.css': 'src/template_styles.scss',
-					'build/css/bootstrap.css': 'src/bootstrap.scss'
+					'build/css/core/bootstrap.css': 'src/core/bootstrap.scss'
 				}
 			}
 		},
@@ -95,9 +98,9 @@ module.exports = function (grunt) {
 			target: {
 				files: [{
 					expand: true,
-					cwd: 'build/css',
+					cwd: 'build/css/core/',
 					src: ['*.css', '!*.min.css'],
-					dest: 'build/css',
+					dest: 'build/css/core/',
 					ext: '.min.css'
 				}]
 			}
@@ -106,9 +109,9 @@ module.exports = function (grunt) {
 			target: {
 				files: [{
 					expand: true,
-					cwd: 'build/js',
+					cwd: 'build/js/core/',
 					src: ['*.js', '!*.min.js'],
-					dest: 'build/js',
+					dest: 'build/js/core/',
 					ext: '.min.js'
 				}]
 			}
@@ -126,7 +129,7 @@ module.exports = function (grunt) {
 						'bower_components/jquery/dist/jquery.min.js',
 						'bower_components/respond/dest/respond.min.js',
 						'bower_components/modernizr/modernizr.js'
-					], flatten: true, dest: 'build/js/', filter: 'isFile'}
+					], flatten: true, dest: 'build/js/core/', filter: 'isFile'}
 				],
 			}
 		}
