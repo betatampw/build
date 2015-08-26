@@ -2,7 +2,7 @@
 	"all": {
 		"links": ["menu item 1","menu item 2","menu item 3"]
 	},
-	"index": {
+	"main": {
 		"title": "Index",
 		"main": true
 	},

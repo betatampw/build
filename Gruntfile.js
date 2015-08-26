@@ -132,7 +132,15 @@ module.exports = function (grunt) {
 					], flatten: true, dest: 'build/js/core/', filter: 'isFile'}
 				],
 			}
-		}
+		},
+		connect: {
+    	server: {
+				options: {
+					keepalive: true,
+					base: 'build'
+				}
+			}
+  	}
 	});
 
   // Load the plugin.
@@ -145,6 +153,7 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-cssmin');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-copy');
+	grunt.loadNpmTasks('grunt-contrib-connect');
 
   // Register tasks.
 	grunt.registerTask('html', ['concat:pages','compile-handlebars']);
