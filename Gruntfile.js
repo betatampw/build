@@ -3,25 +3,23 @@ module.exports = function (grunt) {
 
 	// TODO убрать все лишнее
 	var fs = require('fs');
-
 	var compileHandlebarsAr = [{
 		src: [],
 		dest: []
 	}];
 	var compileHandlebarsDataAr = [];
-	var pageSettings = JSON.parse(fs.readFileSync('src/pagesSettings.json', 'utf8'));
+	var pagesData = JSON.parse(fs.readFileSync('src/pagesData.json', 'utf8'));
 	var pages = fs.readdirSync('src/pages/');
 	pages.forEach(function (value) {
 		var file = value.split('.');
 		compileHandlebarsAr[0].src.push('build/'+value);
 		compileHandlebarsAr[0].dest.push('build/'+value);
-		compileHandlebarsDataAr.push({"all":pageSettings['all'],"page":pageSettings[file[0]]});
+		compileHandlebarsDataAr.push({"all":pagesData['all'],"page":pagesData[file[0]]});
 	});
 
   // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-		pagesData: grunt.file.readJSON('src/pagesSettings.json'),
 		clean: ["build/*"],
 		concat: {
 			pages: {
@@ -38,22 +36,14 @@ module.exports = function (grunt) {
 			},
 			bootstrapjs: {
 				files: {
-					'build/js/core/bootstrap.js': grunt.file.readJSON('src/core/bootstrap.json'),
+					'build/js/core/bootstrap.js': grunt.file.readJSON('src/bootstrap/bootstrap.json'),
 				}
 			}
 		},
 		'compile-handlebars': {
 			pages: {
-				/*files: compileHandlebarsAr,
-				templateData: compileHandlebarsDataAr*/
-				files: [{
-					expand: true,
-					cwd: 'build/',
-					src: '*.html',
-					dest: 'build/',
-					ext: '.html'
-				}],
-				templateData: {'template':'<%= pagesData.all  %>',page:'<%= pagesData.*  %>'}
+				files: compileHandlebarsAr,
+				templateData: compileHandlebarsDataAr
 			}
 		},
 		sass: {
@@ -63,8 +53,8 @@ module.exports = function (grunt) {
 			},
 			dist: {
 				files: {
-					'build/template_styles.css': 'src/template_styles.scss',
-					'build/css/core/bootstrap.css': 'src/core/bootstrap.scss'
+					'build/template_styles.css': 'src/styles.scss',
+					'build/css/core/bootstrap.css': 'src/bootstrap/bootstrap.scss'
 				}
 			}
 		},
@@ -98,10 +88,11 @@ module.exports = function (grunt) {
 			target: {
 				files: [{
 					expand: true,
-					cwd: 'build/css/core/',
-					src: ['*.css', '!*.min.css'],
-					dest: 'build/css/core/',
-					ext: '.min.css'
+					cwd: 'build/css/',
+					src: ['**/*.css', '!**/*.min.css'],
+					dest: 'build/css/',
+					ext: '.min.css',
+					extDot: 'last'
 				}]
 			}
 		},
@@ -109,27 +100,35 @@ module.exports = function (grunt) {
 			target: {
 				files: [{
 					expand: true,
-					cwd: 'build/js/core/',
-					src: ['*.js', '!*.min.js'],
-					dest: 'build/js/core/',
-					ext: '.min.js'
+					cwd: 'build/js/',
+					src: ['**/*.js', '!**/*.min.js'],
+					dest: 'build/js/',
+					ext: '.min.js',
+					extDot: 'last'
 				}]
 			}
 		},
 		copy: {
 			main: {
 				files: [
-					{expand: true, src: ['src/icons/*'], flatten: true, dest: 'build/icons/', filter: 'isFile'},
-					{expand: true, src: ['src/images/*'], flatten: true, dest: 'build/images/', filter: 'isFile'}
+					{expand: true, src: ['src/icons/*'], flatten: true, dest: 'build/icons/'},
+					{expand: true, src: ['src/images/*'], flatten: true, dest: 'build/images/'}
 				],
 			},
 			js: {
 				files: [
+					{expand: true, src: ['src/js/*'], flatten: true, dest: 'build/js/'},
+					{expand: true, src: ['src/script.js'], flatten: true, dest: 'build/'},
 					{expand: true, src: [
 						'bower_components/jquery/dist/jquery.min.js',
 						'bower_components/respond/dest/respond.min.js',
 						'bower_components/modernizr/modernizr.js'
 					], flatten: true, dest: 'build/js/core/', filter: 'isFile'}
+				],
+			},
+			css: {
+				files: [
+					{expand: true, src: ['src/css/*'], flatten: true, dest: 'build/css/'}
 				],
 			}
 		},
@@ -140,7 +139,28 @@ module.exports = function (grunt) {
 					base: 'build'
 				}
 			}
-  	}
+  	},
+		includeSource: {
+			options: {
+				basePath: 'build',
+				templates: {
+					html: {
+						js: '<script src="{filePath}"></script>',
+						css: '<link rel="stylesheet" href="{filePath}" />',
+					},
+				}
+			},
+			myTarget: {
+				files: [{
+					expand: true,
+					cwd: 'build/',
+					src: '*.html',
+					dest: 'build/',
+					ext: '.html',
+					extDot: 'last'
+				}]
+			}
+		}
 	});
 
   // Load the plugin.
@@ -154,10 +174,11 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-copy');
 	grunt.loadNpmTasks('grunt-contrib-connect');
+	grunt.loadNpmTasks('grunt-include-source');
 
   // Register tasks.
-	grunt.registerTask('html', ['concat:pages','compile-handlebars']);
-	grunt.registerTask('css', ['sass','autoprefixer','csscomb','cssmin']);
+	grunt.registerTask('html', ['concat:pages','compile-handlebars','includeSource']);
+	grunt.registerTask('css', ['sass','autoprefixer','copy:css','csscomb','cssmin']);
 	grunt.registerTask('js', ['concat:bootstrapjs','copy:js','uglify']);
-  grunt.registerTask('default', ['clean','html','css','js','copy:main']);
+  grunt.registerTask('default', ['clean','css','js','copy:main','html']);
 };

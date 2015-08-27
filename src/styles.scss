@@ -1,0 +1,10 @@
+@import "template_styles/lg";
+@media (max-width: 1200px) {
+	@import "template_styles/md";
+}
+@media (max-width: 992px) {
+	@import "template_styles/sm";
+}
+@media (max-width: 767px) {
+	@import "template_styles/xs";
+}
