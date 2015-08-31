@@ -175,6 +175,7 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-copy');
 	grunt.loadNpmTasks('grunt-contrib-connect');
 	grunt.loadNpmTasks('grunt-include-source');
+	grunt.loadNpmTasks('grunt-contrib-watch');
 
   // Register tasks.
 	grunt.registerTask('html', ['concat:pages','compile-handlebars','includeSource']);
