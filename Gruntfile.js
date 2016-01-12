@@ -162,7 +162,7 @@ module.exports = function (grunt) {
 			}
 		},
 		
-		connect: { // TODO LIVE RELOAD
+		connect: {
     	server: {
 				options: {
 					keepalive: true,
@@ -173,13 +173,22 @@ module.exports = function (grunt) {
 			}
   	},		
 		watch: {
-			options: {
-				livereload: true
+			html: {
+				files: [
+					"src/pages/*.html",
+					"src/header.html",
+					"src/footer.html",
+					"src/pagesData.json"
+				],
+				tasks: ['html'],
 			},
 			reload: {
 				files: [
-					"build/template_styles.css"
-				]
+					"build/**/*.*"
+				],
+				options: {
+					livereload: true
+				}
 			}
 		}
 		
@@ -225,9 +234,4 @@ module.exports = function (grunt) {
 		'copy:main',
 		'html'
 	]);
-	grunt.registerTask('server',[
-		'connect',
-		'watch'
-	]);	
-	
 };
