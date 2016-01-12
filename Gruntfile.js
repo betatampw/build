@@ -47,13 +47,21 @@ module.exports = function (grunt) {
 			}
 		},
 		sass: {
-			options: {
-				noCache: true,
-				sourcemap: 'none'
-			},
-			dist: {
+			styles:{
+				options: {
+					noCache: true,
+					sourcemap: 'none'
+				},
 				files: {
 					'build/template_styles.css': 'src/styles.scss',
+				}
+			},
+			bootstrap:{
+				options: {
+					noCache: true,
+					sourcemap: 'none'
+				},
+				files: {
 					'build/css/core/bootstrap.css': 'src/bootstrap/bootstrap.scss'
 				}
 			}
@@ -132,14 +140,6 @@ module.exports = function (grunt) {
 				],
 			}
 		},
-		connect: {
-    	server: {
-				options: {
-					keepalive: true,
-					base: 'build'
-				}
-			}
-  	},
 		includeSource: {
 			options: {
 				basePath: 'build',
@@ -160,7 +160,29 @@ module.exports = function (grunt) {
 					extDot: 'last'
 				}]
 			}
+		},
+		
+		connect: { // TODO LIVE RELOAD
+    	server: {
+				options: {
+					keepalive: true,
+					base: 'build',
+					livereload: true,
+					open: true
+				}
+			}
+  	},		
+		watch: {
+			options: {
+				livereload: true
+			},
+			reload: {
+				files: [
+					"build/template_styles.css"
+				]
+			}
 		}
+		
 	});
 
   // Load the plugin.
@@ -178,8 +200,34 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-watch');
 
   // Register tasks.
-	grunt.registerTask('html', ['concat:pages','compile-handlebars','includeSource']);
-	grunt.registerTask('css', ['sass','autoprefixer','copy:css','csscomb','cssmin']);
-	grunt.registerTask('js', ['concat:bootstrapjs','copy:js','uglify']);
-  grunt.registerTask('default', ['clean','css','js','copy:main','html']);
+	grunt.registerTask('html', [
+		'concat:pages',
+		'compile-handlebars',
+		'includeSource'
+	]);
+	grunt.registerTask('css', [
+		'sass:styles',
+		'sass:bootstrap',
+		'autoprefixer',
+		'copy:css',
+		'csscomb',
+		'cssmin'
+	]);
+	grunt.registerTask('js', [
+		'concat:bootstrapjs',
+		'copy:js',
+		'uglify'
+	]);
+  grunt.registerTask('default', [
+		'clean',
+		'css',
+		'js',
+		'copy:main',
+		'html'
+	]);
+	grunt.registerTask('server',[
+		'connect',
+		'watch'
+	]);	
+	
 };
