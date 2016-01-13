@@ -15,7 +15,9 @@
     "grunt-contrib-uglify": "^0.9.1",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-csscomb": "^3.0.1",
-    "grunt-include-source": "^0.6.1"
+    "grunt-include-source": "^0.6.1",
+    "jit-grunt": "^0.9.1",
+    "time-grunt": "^1.3.0"
   },
   "scripts": {
     "preinstall": "npm install -g bower && npm install -g grunt-cli && gem install sass",

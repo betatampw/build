@@ -1,6 +1,7 @@
 module.exports = function (grunt) {
 	'use struct';
-
+	require('time-grunt')(grunt);
+	require('jit-grunt')(grunt);
 	// TODO убрать все лишнее
 	var fs = require('fs');
 	var compileHandlebarsAr = [{
@@ -182,6 +183,12 @@ module.exports = function (grunt) {
 				],
 				tasks: ['html'],
 			},
+			mainCss: {
+				files: [
+					"src/template_styles/*.scss",
+				],
+				tasks: ['sass:styles'],	
+			},
 			reload: {
 				files: [
 					"build/**/*.*"
@@ -191,22 +198,9 @@ module.exports = function (grunt) {
 				}
 			}
 		}
-		
 	});
 
-  // Load the plugin.
-	grunt.loadNpmTasks('grunt-contrib-clean');
-	grunt.loadNpmTasks('grunt-contrib-concat');
-	grunt.loadNpmTasks('grunt-compile-handlebars');
-	grunt.loadNpmTasks('grunt-contrib-sass');
-	grunt.loadNpmTasks('grunt-autoprefixer');
-	grunt.loadNpmTasks('grunt-csscomb');
-	grunt.loadNpmTasks('grunt-contrib-cssmin');
-	grunt.loadNpmTasks('grunt-contrib-uglify');
-	grunt.loadNpmTasks('grunt-contrib-copy');
-	grunt.loadNpmTasks('grunt-contrib-connect');
-	grunt.loadNpmTasks('grunt-include-source');
-	grunt.loadNpmTasks('grunt-contrib-watch');
+
 
   // Register tasks.
 	grunt.registerTask('html', [
